@@ -1,0 +1,69 @@
+{{- $enabled := site.Params.interactions.enabled | default true -}}
+{{- if $enabled -}}
+{{- $followLabel := site.Params.interactions.followLabel | default "关注站点" -}}
+{{- $likeLabel := site.Params.interactions.likeLabel | default "点赞这篇" -}}
+{{- $commentLabel := site.Params.interactions.commentLabel | default "写留言" -}}
+{{- $panelTitle := site.Params.interactions.title | default "互动一下" -}}
+{{- $panelSubtitle := site.Params.interactions.subtitle | default "支持这篇内容，或者留下你的想法。" -}}
+{{- $followHref := site.Params.interactions.followUrl | default ("" | absLangURL) -}}
+{{- $key := printf "%s#%s" .RelPermalink .Lang -}}
+{{- $commentsProvider := site.Params.comments.provider | default "" -}}
+{{- $hasLiveComments := eq $commentsProvider "giscus" -}}
+<section
+  class="post-interactions"
+  data-post-interactions
+  data-storage-key="{{ $key }}"
+  data-follow-url="{{ $followHref }}"
+  data-live-comments="{{ cond $hasLiveComments "true" "false" }}"
+  aria-labelledby="post-interactions-title">
+  <div class="post-interactions__intro">
+    <p class="post-interactions__eyebrow">Community</p>
+    <h2 id="post-interactions-title" class="post-interactions__title">{{ $panelTitle }}</h2>
+    <p class="post-interactions__subtitle">{{ $panelSubtitle }}</p>
+  </div>
+
+  <div class="post-interactions__actions">
+    <a class="post-interactions__button" href="{{ $followHref }}">
+      <span class="post-interactions__button-label">{{ $followLabel }}</span>
+      <span class="post-interactions__count" data-followers-count>1</span>
+    </a>
+    <button class="post-interactions__button" type="button" data-like-button>
+      <span class="post-interactions__button-label">{{ $likeLabel }}</span>
+      <span class="post-interactions__count" data-likes-count>0</span>
+    </button>
+    <button class="post-interactions__button" type="button" data-comment-toggle>
+      <span class="post-interactions__button-label">{{ $commentLabel }}</span>
+      {{- if $hasLiveComments -}}
+      <span class="post-interactions__count">GitHub</span>
+      {{- else -}}
+      <span class="post-interactions__count" data-comments-count>0</span>
+      {{- end -}}
+    </button>
+  </div>
+
+  {{- if not $hasLiveComments -}}
+  <div class="post-interactions__comment-box" data-comment-box hidden>
+    <form class="post-interactions__form" data-comment-form>
+      <label class="post-interactions__field">
+        <span>昵称</span>
+        <input type="text" name="name" maxlength="24" placeholder="访客" />
+      </label>
+      <label class="post-interactions__field">
+        <span>留言内容</span>
+        <textarea name="message" rows="4" maxlength="300" placeholder="写下你的想法..." required></textarea>
+      </label>
+      <div class="post-interactions__form-footer">
+        <p class="post-interactions__hint">留言仅保存在当前浏览器，适合作为前端演示版。</p>
+        <button class="post-interactions__submit" type="submit">发布留言</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="post-interactions__comments" data-comments-list>
+    <p class="post-interactions__empty">还没有留言，来写第一条。</p>
+  </div>
+  {{- else -}}
+  <p class="post-interactions__hint post-interactions__hint--inline">留言将通过 GitHub Discussions 发布与管理。</p>
+  {{- end -}}
+</section>
+{{- end -}}

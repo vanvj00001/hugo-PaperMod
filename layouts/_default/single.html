@@ -42,6 +42,8 @@
   </div>
   {{- end }}
 
+  {{- partial "post_interactions.html" . }}
+
   <footer class="post-footer">
     {{- $tags := .Language.Params.Taxonomies.tag | default "tags" }}
     <ul class="post-tags">
@@ -57,7 +59,7 @@
     {{- end }}
   </footer>
 
-  {{- if (.Param "comments") }}
+  {{- if or (.Param "comments") (site.Params.comments.enabled | default false) }}
   {{- partial "comments.html" . }}
   {{- end }}
 </article>

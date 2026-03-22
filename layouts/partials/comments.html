@@ -1,3 +1,42 @@
-{{- /* Comments area start */ -}}
-{{- /* to add comments read => https://gohugo.io/content-management/comments/ */ -}}
-{{- /* Comments area end */ -}}
+{{- $provider := site.Params.comments.provider | default "" -}}
+{{- if eq $provider "giscus" -}}
+{{- $giscus := site.Params.comments.giscus -}}
+{{- $repo := $giscus.repo | default "" -}}
+{{- $repoID := $giscus.repoID | default "" -}}
+{{- $category := $giscus.category | default "" -}}
+{{- $categoryID := $giscus.categoryID | default "" -}}
+{{- $mapping := $giscus.mapping | default "pathname" -}}
+{{- $strict := $giscus.strict | default "0" -}}
+{{- $reactionsEnabled := $giscus.reactionsEnabled | default "1" -}}
+{{- $emitMetadata := $giscus.emitMetadata | default "0" -}}
+{{- $inputPosition := $giscus.inputPosition | default "bottom" -}}
+{{- $theme := $giscus.theme | default "preferred_color_scheme" -}}
+{{- $lang := $giscus.lang | default site.Language.Lang | default "zh-CN" -}}
+<section class="comments-area" id="comments">
+  <h2 class="comments-area__title">留言</h2>
+  {{- if and $repo $repoID $category $categoryID -}}
+  <div class="giscus"></div>
+  <script
+    src="https://giscus.app/client.js"
+    data-repo="{{ $repo }}"
+    data-repo-id="{{ $repoID }}"
+    data-category="{{ $category }}"
+    data-category-id="{{ $categoryID }}"
+    data-mapping="{{ $mapping }}"
+    data-strict="{{ $strict }}"
+    data-reactions-enabled="{{ $reactionsEnabled }}"
+    data-emit-metadata="{{ $emitMetadata }}"
+    data-input-position="{{ $inputPosition }}"
+    data-theme="{{ $theme }}"
+    data-lang="{{ $lang }}"
+    crossorigin="anonymous"
+    async>
+  </script>
+  {{- else -}}
+  <p class="comments-area__hint">
+    评论系统已启用，但还缺少 giscus 配置。请在站点配置中补齐 `params.comments.giscus.repo`、
+    `repoID`、`category` 和 `categoryID`。
+  </p>
+  {{- end -}}
+</section>
+{{- end -}}

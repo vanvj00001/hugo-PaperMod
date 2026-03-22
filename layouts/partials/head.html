@@ -89,6 +89,17 @@
 {{- end }}
 {{- end -}}
 
+{{- /* Post interactions */}}
+{{- if and (eq .Kind "page") (site.Params.interactions.enabled | default true) }}
+{{- $postInteractions := resources.Get "js/post-interactions.js" | resources.Minify }}
+{{- if not site.Params.assets.disableFingerprinting }}
+{{- $postInteractions := $postInteractions | fingerprint }}
+<script defer crossorigin="anonymous" src="{{ $postInteractions.RelPermalink }}" integrity="{{ $postInteractions.Data.Integrity }}"></script>
+{{- else }}
+<script defer crossorigin="anonymous" src="{{ $postInteractions.RelPermalink }}"></script>
+{{- end }}
+{{- end }}
+
 {{- /* Favicons */}}
 <link rel="icon" href="{{ site.Params.assets.favicon | default "favicon.ico" | absURL }}">
 <link rel="icon" type="image/png" sizes="16x16" href="{{ site.Params.assets.favicon16x16 | default "favicon-16x16.png" | absURL }}">
