@@ -101,6 +101,9 @@
 {{- end }}
 
 {{- if site.Params.pageViews.enabled | default true }}
+<script>
+    window.__PAGE_VIEWS_ENDPOINT = {{ site.Params.pageViews.endpoint | default "/api/page-views" | jsonify | safeJS }};
+</script>
 {{- $pageViews := resources.Get "js/page-views.js" | resources.Minify }}
 {{- if not site.Params.assets.disableFingerprinting }}
 {{- $pageViews := $pageViews | fingerprint }}

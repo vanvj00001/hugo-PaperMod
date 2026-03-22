@@ -5,7 +5,7 @@
     }
 
     const grouped = new Map();
-    const endpoint = "/api/page-views";
+    const endpoint = window.__PAGE_VIEWS_ENDPOINT || "/api/page-views";
 
     nodes.forEach((node) => {
         const namespace = node.dataset.pageviewsNamespace || "oldvan-top";
