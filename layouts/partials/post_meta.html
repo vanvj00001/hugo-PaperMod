@@ -1,7 +1,7 @@
 {{- $scratch := newScratch }}
 {{- $page := . }}
 {{- $pageViewsMode := "hit" }}
-{{- if reflect.IsMap . }}
+{{- if isset . "page" }}
 {{- $page = .page }}
 {{- $pageViewsMode = .pageViewsMode | default "hit" }}
 {{- end }}
