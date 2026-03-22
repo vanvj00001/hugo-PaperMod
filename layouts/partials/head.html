@@ -100,8 +100,14 @@
 {{- end }}
 {{- end }}
 
-{{- if and (eq .Kind "page") (.Param "ShowPageViews" | default (site.Params.pageViews.enabled | default true)) }}
-<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+{{- if site.Params.pageViews.enabled | default true }}
+{{- $pageViews := resources.Get "js/page-views.js" | resources.Minify }}
+{{- if not site.Params.assets.disableFingerprinting }}
+{{- $pageViews := $pageViews | fingerprint }}
+<script defer crossorigin="anonymous" src="{{ $pageViews.RelPermalink }}" integrity="{{ $pageViews.Data.Integrity }}"></script>
+{{- else }}
+<script defer crossorigin="anonymous" src="{{ $pageViews.RelPermalink }}"></script>
+{{- end }}
 {{- end }}
 
 {{- /* Favicons */}}

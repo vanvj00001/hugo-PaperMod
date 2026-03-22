@@ -19,7 +19,7 @@
     font-size: 14px;
 }
 
-#busuanzi_container_page_pv {
+.page-views[data-pageviews-container] {
     display: none;
 }
 
