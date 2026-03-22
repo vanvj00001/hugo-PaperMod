@@ -5,6 +5,7 @@
     }
 
     const grouped = new Map();
+    const endpoint = "/api/page-views";
 
     nodes.forEach((node) => {
         const namespace = node.dataset.pageviewsNamespace || "oldvan-top";
@@ -43,20 +44,19 @@
     });
 
     async function loadCount(entry) {
-        const endpoint = "https://api.countapi.xyz/" + entry.mode + "/" +
-            encodeURIComponent(entry.namespace) + "/" + encodeURIComponent(entry.key);
-
         try {
             const response = await fetch(endpoint, {
+                method: "POST",
                 headers: {
-                    Accept: "application/json"
-                }
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    mode: entry.mode,
+                    namespace: entry.namespace,
+                    key: entry.key
+                })
             });
-
-            if (response.status === 404 && entry.mode === "get") {
-                render(entry.nodes, 0);
-                return;
-            }
 
             if (!response.ok) {
                 throw new Error("HTTP " + response.status);
