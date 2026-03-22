@@ -20,7 +20,7 @@
 }
 
 .page-views[data-pageviews-container] {
-    display: none;
+    display: inline;
 }
 
 .breadcrumbs {

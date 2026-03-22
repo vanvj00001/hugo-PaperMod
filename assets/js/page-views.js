@@ -38,6 +38,10 @@
         });
     }
 
+    grouped.forEach((entry) => {
+        render(entry.nodes, 0);
+    });
+
     async function loadCount(entry) {
         const endpoint = "https://api.countapi.xyz/" + entry.mode + "/" +
             encodeURIComponent(entry.namespace) + "/" + encodeURIComponent(entry.key);
@@ -62,6 +66,7 @@
             render(entry.nodes, payload.value || 0);
         } catch (error) {
             console.warn("page views unavailable", entry.key, error);
+            render(entry.nodes, 0);
         }
     }
 
