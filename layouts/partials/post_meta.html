@@ -21,7 +21,14 @@
 {{- if and $page.IsPage ($page.Param "ShowPageViews" | default (site.Params.pageViews.enabled | default true)) -}}
 {{- $pageViewsLabel := site.Params.pageViews.label | default "阅读量" -}}
 {{- $pageViewsNamespace := site.Params.pageViews.namespace | default "oldvan-top" -}}
-{{- $pageViewsKey := printf "%s-%s" $page.Type (md5 $page.RelPermalink) -}}
+{{- $pageViewsSource := $page.Params.pageViewsKey | default "" -}}
+{{- if and (eq $pageViewsSource "") $page.File -}}
+{{- $pageViewsSource = $page.File.Path -}}
+{{- end -}}
+{{- if eq $pageViewsSource "" -}}
+{{- $pageViewsSource = $page.RelPermalink -}}
+{{- end -}}
+{{- $pageViewsKey := printf "%s-%s" $page.Type (md5 $pageViewsSource) -}}
 {{- $scratch.Add "meta" (slice (printf "<span class='page-views' data-pageviews-container data-pageviews-mode='%s' data-pageviews-namespace='%s' data-pageviews-key='%s'>%s <span data-pageviews-value>0</span></span>" $pageViewsMode $pageViewsNamespace $pageViewsKey $pageViewsLabel)) }}
 {{- end }}
 

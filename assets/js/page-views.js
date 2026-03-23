@@ -39,9 +39,15 @@
         });
     }
 
-    grouped.forEach((entry) => {
-        render(entry.nodes, 0);
-    });
+    function renderUnavailable(targets) {
+        targets.forEach((node) => {
+            const valueNode = node.querySelector("[data-pageviews-value]");
+            if (valueNode) {
+                valueNode.textContent = "--";
+            }
+            node.style.display = "inline";
+        });
+    }
 
     async function loadCount(entry) {
         try {
@@ -66,7 +72,7 @@
             render(entry.nodes, payload.value || 0);
         } catch (error) {
             console.warn("page views unavailable", entry.key, error);
-            render(entry.nodes, 0);
+            renderUnavailable(entry.nodes);
         }
     }
 
