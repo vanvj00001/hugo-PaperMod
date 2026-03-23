@@ -29,7 +29,7 @@
 {{- $pageViewsSource = $page.RelPermalink -}}
 {{- end -}}
 {{- $pageViewsKey := printf "%s-%s" $page.Type (md5 $pageViewsSource) -}}
-{{- $scratch.Add "meta" (slice (printf "<span class='page-views' data-pageviews-container data-pageviews-mode='%s' data-pageviews-namespace='%s' data-pageviews-key='%s'>%s <span data-pageviews-value>0</span></span>" $pageViewsMode $pageViewsNamespace $pageViewsKey $pageViewsLabel)) }}
+{{- $scratch.Add "meta" (slice (printf "<span class='page-views' data-pageviews-container data-pageviews-mode='%s' data-pageviews-namespace='%s' data-pageviews-key='%s'>%s <span data-pageviews-value>1</span></span>" $pageViewsMode $pageViewsNamespace $pageViewsKey $pageViewsLabel)) }}
 {{- end }}
 
 {{- if not ($page.Param "hideAuthor") -}}

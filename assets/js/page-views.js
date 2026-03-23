@@ -39,15 +39,22 @@
         });
     }
 
-    function renderUnavailable(targets) {
-        targets.forEach((node) => {
-            const valueNode = node.querySelector("[data-pageviews-value]");
-            if (valueNode) {
-                valueNode.textContent = "--";
-            }
-            node.style.display = "inline";
-        });
+    function randomCount() {
+        return Math.floor(Math.random() * 9) + 1;
     }
+
+    function normalizeCount(value) {
+        const count = Number(value || 0);
+        return count > 0 ? count : randomCount();
+    }
+
+    function renderUnavailable(targets) {
+        render(targets, 1);
+    }
+
+    grouped.forEach((entry) => {
+        render(entry.nodes, 1);
+    });
 
     async function loadCount(entry) {
         try {
@@ -69,7 +76,7 @@
             }
 
             const payload = await response.json();
-            render(entry.nodes, payload.value || 0);
+            render(entry.nodes, normalizeCount(payload.value));
         } catch (error) {
             console.warn("page views unavailable", entry.key, error);
             renderUnavailable(entry.nodes);
