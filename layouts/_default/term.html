@@ -1,0 +1,92 @@
+{{- define "title" -}}
+  {{- .Title }} - {{ T .Data.Singular | default .Data.Singular -}}
+  {{- if .Site.Params.withSiteTitle }} {{ .Site.Params.titleDelimiter }} {{ .Site.Title }}{{- end -}}
+{{- end -}}
+
+{{- define "content" -}}
+<div class="page archive">
+  {{- $term := .Data.Term -}}
+  {{- $termTitle := .Title -}}
+  {{- $pageCount := len .Pages -}}
+
+  {{- if eq $term "传统养生" -}}
+  {{- /* 传统养生分类：按八段锦、五禽戏分组展示 */ -}}
+  <h1 class="single-title animate__animated animate__pulse animate__faster">
+    {{- $termTitle -}}
+    <sup>{{ $pageCount }}</sup>
+  </h1>
+
+  {{- $baduanjin := slice }}
+  {{- $wuqinxi := slice }}
+  {{- range .Pages }}
+    {{- if and (eq .Type "posts") (in .Params.tags "八段锦") }}
+      {{- $baduanjin = $baduanjin | append . }}
+    {{- else if and (eq .Type "posts") (in .Params.tags "五禽戏") }}
+      {{- $wuqinxi = $wuqinxi | append . }}
+    {{- end }}
+  {{- end }}
+
+  {{- /* 八段锦 */ -}}
+  {{- if $baduanjin }}
+  <div class="baduanjin-section">
+    <h2 class="group-title">
+      <a href="/categories/八段锦/">八段锦</a>
+    </h2>
+    <div class="archive-list">
+      {{- range $baduanjin }}
+      <article class="archive-item">
+        <a href="{{ .RelPermalink }}" class="archive-item-link">{{ .LinkTitle }}</a>
+      </article>
+      {{- end }}
+    </div>
+  </div>
+  {{- end }}
+
+  {{- /* 五禽戏 */ -}}
+  {{- if $wuqinxi }}
+  <div class="wuqinxi-section">
+    <h2 class="group-title">
+      <a href="/categories/五禽戏/">五禽戏</a>
+    </h2>
+    <div class="archive-list">
+      {{- range $wuqinxi }}
+      <article class="archive-item">
+        <a href="{{ .RelPermalink }}" class="archive-item-link">{{ .LinkTitle }}</a>
+      </article>
+      {{- end }}
+    </div>
+  </div>
+  {{- end }}
+
+  {{- else }}
+  {{- /* 其他分类：默认按年份分组 */ -}}
+  <h1 class="single-title animate__animated animate__pulse animate__faster">
+    {{- $termTitle -}}
+    <sup>{{ $pageCount }}</sup>
+  </h1>
+
+  {{- if .Pages }}
+    {{- $pages := .Pages.GroupByDate "2006" }}
+    {{- with .Site.Params.list.paginate | default .Site.Params.paginate }}
+      {{- $pages = $.Paginate $pages . }}
+    {{- else }}
+      {{- $pages = .Paginate $pages }}
+    {{- end }}
+    {{- partial "section/recently-updated.html" . }}
+    {{- range $pages.PageGroups }}
+    <h2 class="group-title">
+      {{- dict "Class" "fa-regular fa-calendar me-1" | partial "plugin/icon.html" -}}
+      {{- .Key -}}
+    </h2>
+    {{- range .Pages }}
+    <article class="archive-item">
+      <a href="{{ .RelPermalink }}" class="archive-item-link">{{ .LinkTitle }}</a>
+      <span class="archive-item-date">{{ .Date | dateFormat "01-02" }}</span>
+    </article>
+    {{- end }}
+    {{- end }}
+    {{- partial "layouts/paginator.html" . }}
+  {{- end }}
+  {{- end }}
+</div>
+{{- end -}}
